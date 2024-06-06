@@ -5,33 +5,17 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const App = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentCreatorIndex, setCurrentCreatorIndex] = useState(0);
-  
-  const carouselData = [
-    { id: '1', image: require('./assets/image1.png') },
-    { id: '2', image: require('./assets/image1.png') },
-    { id: '3', image: require('./assets/image1.png') }
-  ];
-
-  const creatorsData = [
-    { id: '1', image: require('./assets/image1.png'), name: 'Edgar Feitoza' },
-    { id: '2', image: require('./assets/image1.png'), name: 'Matheus Lucindo' },
-    { id: '3', image: require('./assets/image1.png'), name: 'Luiz Henrique' },
-    { id: '4', image: require('./assets/image1.png'), name: 'Luis' },
-    { id: '5', image: require('./assets/image1.png'), name: 'LimaZ' }
+  const creatorData = [
+    { id: '1', name: 'Creator 1', image: require('./assets/creator1.png') },
+    { id: '2', name: 'Creator 2', image: require('./assets/creator2.png') },
+    { id: '3', name: 'Creator 3', image: require('./assets/creator3.png') },
+    { id: '4', name: 'Creator 4', image: require('./assets/creator4.png') },
+    { id: '5', name: 'Creator 5', image: require('./assets/creator5.png') }
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselData.length);
-    }, 3000); // Change image every 3 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCreatorIndex((prevIndex) => (prevIndex + 1) % creatorsData.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % creatorData.length);
     }, 3000); // Change creator every 3 seconds
 
     return () => clearInterval(interval);
@@ -49,7 +33,7 @@ const App = () => {
       <ScrollView style={styles.content}>
         <View style={styles.carousel}>
           <FlatList
-            data={carouselData}
+            data={creatorData}
             keyExtractor={(item) => item.id}
             horizontal
             pagingEnabled
@@ -59,11 +43,14 @@ const App = () => {
               setCurrentIndex(newIndex);
             }}
             renderItem={({ item }) => (
-              <Image source={item.image} style={styles.carouselImage} />
+              <View style={styles.creatorContainer}>
+                <Image source={item.image} style={styles.creatorImage} />
+                <Text style={styles.creatorName}>{item.name}</Text>
+              </View>
             )}
           />
           <View style={styles.indicatorContainer}>
-            {carouselData.map((_, index) => (
+            {creatorData.map((_, index) => (
               <View
                 key={index}
                 style={[styles.indicator, index === currentIndex ? styles.activeIndicator : null]}
@@ -95,16 +82,6 @@ const App = () => {
           <Text style={styles.sectionTitle2}>Criadores</Text>
           <View style={styles.sectionSeparator}></View>
           <Text style={styles.sectionText2}>Equipe que contribuiu com a produção do aplicativo.</Text>
-          <View style={styles.creators}>
-            {creatorsData.map((creator, index) => (
-              index === currentCreatorIndex && (
-                <View key={creator.id} style={styles.creator}>
-                  <Image source={creator.image} style={styles.creatorImage} />
-                  <Text style={styles.creatorName}>{creator.name}</Text>
-                </View>
-              )
-            ))}
-          </View>
         </View>
 
         <View style={styles.section}>
@@ -118,10 +95,9 @@ const App = () => {
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>
+
         </View>
-
         <View style={styles.sectionSeparator4}></View>
-
         <View style={styles.footer}>
           <View style={styles.iconTextContainer}>
             <Image source={require('./assets/fone.png')} style={styles.icon} />
@@ -133,7 +109,7 @@ const App = () => {
           </View>
           <View style={styles.iconTextContainer}>
             <Image source={require('./assets/corp.png')} style={styles.icon} />
-            <Text style={styles.footerText}>Endereço</Text>
+            <Text style={styles.footerText}>Endereço</Text
           </View>
         </View>
 
@@ -165,20 +141,20 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     textAlign: 'left',
-    marginTop: 5,
+    marginTop: 15,
   },
   menuIcon: {
     width: 40,
     height: 40,
     marginLeft: 325,
-    top: 50,
+    top: 58,
   },
   carousel: {
     height: 280,
   },
   carouselImage: {
-    width: screenWidth,
-    height: '100%',
+    width: screenWidth, // Ensure the image takes the full width
+    height: '100%', // Take full height of the container
     resizeMode: 'cover',
   },
   indicatorContainer: {
@@ -189,6 +165,20 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+  iconTextContainer: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  icon: {
+    width: 42,
+    height: 42,
+  },
+  footerText: {
+    fontSize: 16,
+    color: '#fff',
+    marginTop: 5, // Espaçamento entre o ícone e o texto
+  },
+  
   indicator: {
     width: 8,
     height: 8,
@@ -206,7 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     fontWeight: 'bold',
     top: 25,
   },
@@ -214,7 +204,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     fontWeight: 'bold',
     top: 45,
   },
@@ -222,30 +212,30 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     fontWeight: 'bold',
     top: 75,
   },
   sectionSeparator: {
-    borderBottomColor: 'white',
+    borderBottomColor: 'white', // Adiciona uma linha branca abaixo do título
     borderBottomWidth: 1,
-    marginBottom: 10,
+    marginBottom: 10, // Espaçamento abaixo da linha
     top: 65,
     width: 160,
     alignSelf: 'center',
   },
   sectionSeparator3: {
-    borderBottomColor: 'white',
+    borderBottomColor: 'white', // Adiciona uma linha branca abaixo do título
     borderBottomWidth: 1,
-    marginBottom: 10,
+    marginBottom: 10, // Espaçamento abaixo da linha
     top: 95,
     width: 160,
     alignSelf: 'center',
   },
   sectionSeparator4: {
-    borderBottomColor: 'white',
+    borderBottomColor: 'white', // Adiciona uma linha branca abaixo do título
     borderBottomWidth: 1,
-    marginBottom: 10,
+    marginBottom: 10, // Espaçamento abaixo da linha
     top: 175,
     width: 600,
     alignSelf: 'center',
@@ -253,19 +243,19 @@ const styles = StyleSheet.create({
   sectionText: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     top: 50,
   },
   sectionText2: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     top: 85,
   },
   sectionText3: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     top: 115,
   },
   card: {
@@ -279,18 +269,17 @@ const styles = StyleSheet.create({
   creators: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     marginTop: 190,
   },
-  creator: {
+  creatorContainer: {
     alignItems: 'center',
     marginHorizontal: 10,
   },
   creatorImage: {
-    width: 123,
-    height: 123,
-    backgroundColor: '#555',
-    borderRadius: 100,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     marginBottom: 10,
   },
   creatorName: {
@@ -309,7 +298,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF5C00',
     padding: 15,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: 'center', 
     top: 165,
   },
   buttonText: {
@@ -323,6 +312,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#2C2F4A',
   },
+
   footerNote: {
     padding: 20,
     alignItems: 'center',

@@ -165,13 +165,13 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     textAlign: 'left',
-    marginTop: 5,
+    marginTop: 10,
   },
   menuIcon: {
     width: 40,
     height: 40,
     marginLeft: 325,
-    top: 50,
+    top: 58,
   },
   carousel: {
     height: 280,

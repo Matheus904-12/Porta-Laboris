@@ -17,8 +17,7 @@ const App = () => {
     { id: '1', image: require('./assets/image1.png'), name: 'Edgar Feitoza' },
     { id: '2', image: require('./assets/image1.png'), name: 'Matheus Lucindo' },
     { id: '3', image: require('./assets/image1.png'), name: 'Luiz Henrique' },
-    { id: '4', image: require('./assets/image1.png'), name: 'Luis' },
-    { id: '5', image: require('./assets/image1.png'), name: 'LimaZ' }
+    { id: '4', image: require('./assets/image1.png'), name: 'Luis' }
   ];
 
   useEffect(() => {
@@ -165,13 +164,13 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     textAlign: 'left',
-    marginTop: 5,
+    marginTop: 15,
   },
   menuIcon: {
     width: 40,
     height: 40,
     marginLeft: 325,
-    top: 50,
+    top: 58,
   },
   carousel: {
     height: 280,

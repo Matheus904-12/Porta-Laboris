@@ -5,34 +5,16 @@ const { width: screenWidth } = Dimensions.get('window');
 
 const App = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentCreatorIndex, setCurrentCreatorIndex] = useState(0);
-  
   const carouselData = [
     { id: '1', image: require('./assets/image1.png') },
     { id: '2', image: require('./assets/image1.png') },
     { id: '3', image: require('./assets/image1.png') }
   ];
 
-  const creatorsData = [
-    { id: '1', image: require('./assets/image1.png'), name: 'Edgar Feitoza' },
-    { id: '2', image: require('./assets/image1.png'), name: 'Matheus Lucindo' },
-    { id: '3', image: require('./assets/image1.png'), name: 'Luiz Henrique' },
-    { id: '4', image: require('./assets/image1.png'), name: 'Luis' },
-    { id: '5', image: require('./assets/image1.png'), name: 'LimaZ' }
-  ];
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselData.length);
     }, 3000); // Change image every 3 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentCreatorIndex((prevIndex) => (prevIndex + 1) % creatorsData.length);
-    }, 3000); // Change creator every 3 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -96,20 +78,25 @@ const App = () => {
           <View style={styles.sectionSeparator}></View>
           <Text style={styles.sectionText2}>Equipe que contribuiu com a produção do aplicativo.</Text>
           <View style={styles.creators}>
-            {creatorsData.map((creator, index) => (
-              index === currentCreatorIndex && (
-                <View key={creator.id} style={styles.creator}>
-                  <Image source={creator.image} style={styles.creatorImage} />
-                  <Text style={styles.creatorName}>{creator.name}</Text>
-                </View>
-              )
-            ))}
+            {/* Add creator images here */}
+            <View style={styles.creatorPlaceholder}></View>
           </View>
+          <View style={styles.creators}>
+            {/* Add creator images here */}
+            <View style={styles.creatorPlaceholder}></View>
+            <View style={styles.creatorPlaceholder}></View>
+          </View>
+          <View style={styles.creators}>
+            {/* Add creator images here */}
+            <View style={styles.creatorPlaceholder}></View>
+            <View style={styles.creatorPlaceholder}></View>
+          </View>
+          
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle3}>Fale conosco</Text>
-          <View style={styles.sectionSeparator3}></View>
+          <View style={styles.sectionSeparator}></View>
           <Text style={styles.sectionText3}>Preencha os Campos abaixo para entrar em contato conosco!</Text>
           <TextInput style={styles.input} placeholder="Nome" />
           <TextInput style={styles.input} placeholder="Email" />
@@ -120,21 +107,10 @@ const App = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.sectionSeparator4}></View>
-
         <View style={styles.footer}>
-          <View style={styles.iconTextContainer}>
-            <Image source={require('./assets/fone.png')} style={styles.icon} />
-            <Text style={styles.footerText}>Telefone</Text>
-          </View>
-          <View style={styles.iconTextContainer}>
-            <Image source={require('./assets/email.png')} style={styles.icon} />
-            <Text style={styles.footerText}>Email</Text>
-          </View>
-          <View style={styles.iconTextContainer}>
-            <Image source={require('./assets/corp.png')} style={styles.icon} />
-            <Text style={styles.footerText}>Endereço</Text>
-          </View>
+          <Text>Telefone</Text>
+          <Text>Email</Text>
+          <Text>Endereço</Text>
         </View>
 
         <View style={styles.footerNote}>
@@ -165,20 +141,20 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     textAlign: 'left',
-    marginTop: 5,
+    marginTop: 15,
   },
   menuIcon: {
     width: 40,
     height: 40,
     marginLeft: 325,
-    top: 50,
+    top: 58,
   },
   carousel: {
     height: 280,
   },
   carouselImage: {
-    width: screenWidth,
-    height: '100%',
+    width: screenWidth, // Ensure the image takes the full width
+    height: '100%', // Take full height of the container
     resizeMode: 'cover',
   },
   indicatorContainer: {
@@ -206,7 +182,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     fontWeight: 'bold',
     top: 25,
   },
@@ -214,7 +190,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     fontWeight: 'bold',
     top: 45,
   },
@@ -222,51 +198,36 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#fff',
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     fontWeight: 'bold',
     top: 75,
   },
   sectionSeparator: {
-    borderBottomColor: 'white',
+    borderBottomColor: 'white', // Adiciona uma linha branca abaixo do título
     borderBottomWidth: 1,
-    marginBottom: 10,
+    marginBottom: 10, // Espaçamento abaixo da linha
     top: 65,
     width: 160,
     alignSelf: 'center',
   },
-  sectionSeparator3: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 95,
-    width: 160,
-    alignSelf: 'center',
-  },
-  sectionSeparator4: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 175,
-    width: 600,
-    alignSelf: 'center',
-  },
+  
   sectionText: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     top: 50,
   },
   sectionText2: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
+    textAlign: 'center', // Centraliza o texto
     top: 85,
   },
   sectionText3: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
-    top: 115,
+    textAlign: 'center', // Centraliza o texto
+    top: 85,
   },
   card: {
     top: 45,
@@ -279,23 +240,15 @@ const styles = StyleSheet.create({
   creators: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     marginTop: 190,
   },
-  creator: {
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  creatorImage: {
+  creatorPlaceholder: {
     width: 123,
     height: 123,
     backgroundColor: '#555',
     borderRadius: 100,
-    marginBottom: 10,
-  },
-  creatorName: {
-    color: '#fff',
-    textAlign: 'center',
+    margin: -60,
   },
   input: {
     backgroundColor: '#fff',
@@ -303,31 +256,32 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
-    top: 150,
+    top: 180,
   },
   button: {
-    backgroundColor: '#FF5C00',
+    backgroundColor: '#FF6F00',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
-    top: 165,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 18,
   },
   footer: {
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#2C2F4A',
+    top: 200,
   },
   footerNote: {
     padding: 20,
     alignItems: 'center',
     backgroundColor: '#2C2F4A',
+    top: 100,
   },
 });
 
 export default App;
+
