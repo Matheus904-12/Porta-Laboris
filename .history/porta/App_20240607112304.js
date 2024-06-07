@@ -171,20 +171,19 @@ const App = () => {
         <View style={styles.sectionSeparator4}></View>
 
         <View style={styles.footer}>
-          <TouchableOpacity onPress={() => openModal('Telefone: (11) 99999-9999')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Telefone: (11) 1234-5678')} style={styles.iconTextContainer}>
             <Image source={require('./assets/fone.png')} style={styles.icon} />
             <Text style={styles.footerText}>Telefone</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('Email: networkdev2010@gmail.com')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Email: contato@portalaboris.com')} style={styles.iconTextContainer}>
             <Image source={require('./assets/email.png')} style={styles.icon} />
             <Text style={styles.footerText}>Email</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('Endereço: R. Francisco A Zeiler, 20 - Ferraz de Vasconcelos - SP,')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Endereço: Rua Exemplo, 123, São Paulo, SP')} style={styles.iconTextContainer}>
             <Image source={require('./assets/corp.png')} style={styles.icon} />
             <Text style={styles.footerText}>Endereço</Text>
           </TouchableOpacity>
         </View>
-
 
         <View style={styles.footerNote}>
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>

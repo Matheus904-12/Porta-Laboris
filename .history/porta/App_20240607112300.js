@@ -171,20 +171,19 @@ const App = () => {
         <View style={styles.sectionSeparator4}></View>
 
         <View style={styles.footer}>
-          <TouchableOpacity onPress={() => openModal('Telefone: (11) 99999-9999')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Telefone: (11) 1234-5678')} style={styles.iconTextContainer}>
             <Image source={require('./assets/fone.png')} style={styles.icon} />
             <Text style={styles.footerText}>Telefone</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('Email: networkdev2010@gmail.com')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Email: contato@portalaboris.com')} style={styles.iconTextContainer}>
             <Image source={require('./assets/email.png')} style={styles.icon} />
             <Text style={styles.footerText}>Email</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('Endereço: R. Francisco A Zeiler, 20 - Ferraz de Vasconcelos - SP,')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Endereço: Rua Exemplo, 123, São Paulo, SP')} style={styles.iconTextContainer}>
             <Image source={require('./assets/corp.png')} style={styles.icon} />
             <Text style={styles.footerText}>Endereço</Text>
           </TouchableOpacity>
         </View>
-
 
         <View style={styles.footerNote}>
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>
@@ -220,7 +219,7 @@ const App = () => {
               <>
                 <Text style={styles.modalTitle}>Reformas na CLT</Text>
                 <Text>A Consolidação das Leis do Trabalho (CLT) foi instituída em 1943, durante o governo de Getúlio Vargas, com o objetivo de unificar e regulamentar as relações de trabalho no Brasil. Desde então, a CLT passou por várias reformas, refletindo as transformações econômicas, sociais e políticas do país.
-
+brasileiros
 A reforma mais significativa ocorreu em 2017, conhecida como a Reforma Trabalhista, sancionada pela Lei nº 13.467. Essa reforma introduziu profundas mudanças na legislação trabalhista, com o intuito de modernizar as relações de trabalho e aumentar a competitividade das empresas. Entre as principais alterações, destacam-se:
 
 Independentemente das opiniões divergentes, a reforma representa um marco importante na história das relações de trabalho no Brasil, refletindo a busca por um equilíbrio entre a necessidade de modernização das leis e a preservação dos direitos dos trabalhadores. As consequências e os impactos dessas mudanças ainda estão sendo avaliados e discutidos, mas certamente moldarão o futuro do trabalho no país.</Text>

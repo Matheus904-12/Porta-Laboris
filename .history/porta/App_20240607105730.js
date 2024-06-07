@@ -80,11 +80,18 @@ const App = () => {
     setModalVisible(true);
   };
 
+  const openWebPage = (url) => {
+    Linking.openURL(url);
+    toggleMenu();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
+          <TouchableOpacity onPress={toggleMenu}>
+            <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Porta Laboris</Text>
         </View>
       </View>
@@ -161,8 +168,8 @@ const App = () => {
           <Text style={styles.sectionText3}>Preencha os Campos abaixo para entrar em contato conosco!</Text>
           <TextInput style={styles.input} placeholder="Nome" />
           <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Seu telefone (opicional)" />
-          <TextInput style={styles.input} placeholder="Mensagem" multiline />
+          <TextInput style={styles.input} placeholder="Seu telefone (opicional)" keyboardType="numeric" />
+          <TextInput style={[styles.input, styles.messageInput]} placeholder="Mensagem" multiline />
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>
@@ -185,52 +192,42 @@ const App = () => {
           </TouchableOpacity>
         </View>
 
-
         <View style={styles.footerNote}>
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>
           <Text style={styles.fottext}>Política de Privacidade - Política de Cookies</Text>
         </View>
       </ScrollView>
 
+      {menuVisible && (
+        <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
+          <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
+        </Animated.View>
+      )}
+
+      <Animated.View style={[styles.menu, { transform: [{ translateX }] }]}>
+        <Text style={styles.menuTitle}>Menu</Text>
+        <TouchableOpacity onPress={() => openWebPage('https://www.google.com')}>
+          <Text style={styles.menuItem}>Google</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openWebPage('https://www.facebook.com')}>
+          <Text style={styles.menuItem}>Facebook</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openWebPage('https://www.instagram.com')}>
+          <Text style={styles.menuItem}>Instagram</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openWebPage('https://www.twitter.com')}>
+          <Text style={styles.menuItem}>Twitter</Text>
+        </TouchableOpacity>
+      </Animated.View>
+
       <Modal
         isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        useNativeDriver={true}
-        animationIn="zoomIn"
-        animationOut="zoomOut"
-        backdropTransitionOutTiming={0}
-        style={styles.modal}
+        onBackdropPress={closeModal}
+        onBackButtonPress={closeModal}
       >
         <View style={styles.modalContent}>
-          
-          <Text style={styles.modalText}>
-            {modalContent === 'animation' && (
-              <>
-                <Text style={styles.modalTitle}>A Animação da CLT</Text>
-                <Text>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
-              </>
-            )}
-            {modalContent === 'history' && (
-              <>
-                <Text style={styles.modalTitle}>História da CLT</Text>
-                <Text>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
-              </>
-            )}
-            {modalContent === 'reforms' && (
-              <>
-                <Text style={styles.modalTitle}>Reformas na CLT</Text>
-                <Text>A Consolidação das Leis do Trabalho (CLT) foi instituída em 1943, durante o governo de Getúlio Vargas, com o objetivo de unificar e regulamentar as relações de trabalho no Brasil. Desde então, a CLT passou por várias reformas, refletindo as transformações econômicas, sociais e políticas do país.
-
-A reforma mais significativa ocorreu em 2017, conhecida como a Reforma Trabalhista, sancionada pela Lei nº 13.467. Essa reforma introduziu profundas mudanças na legislação trabalhista, com o intuito de modernizar as relações de trabalho e aumentar a competitividade das empresas. Entre as principais alterações, destacam-se:
-
-Independentemente das opiniões divergentes, a reforma representa um marco importante na história das relações de trabalho no Brasil, refletindo a busca por um equilíbrio entre a necessidade de modernização das leis e a preservação dos direitos dos trabalhadores. As consequências e os impactos dessas mudanças ainda estão sendo avaliados e discutidos, mas certamente moldarão o futuro do trabalho no país.</Text>
-              </>
-            )}
-          </Text>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setModalVisible(false)}
-          >
+          <Text style={styles.modalText}>{modalContent}</Text>
+          <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
             <Text style={styles.closeButtonText}>Fechar</Text>
           </TouchableOpacity>
         </View>
@@ -238,6 +235,7 @@ Independentemente das opiniões divergentes, a reforma representa um marco impor
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

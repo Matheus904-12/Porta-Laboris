@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 
@@ -10,53 +10,19 @@ const App = () => {
   const [currentCreatorIndex, setCurrentCreatorIndex] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
-  const [menuVisible, setMenuVisible] = useState(false);
-  const translateX = useRef(new Animated.Value(screenWidth)).current;
-  const overlayOpacity = useRef(new Animated.Value(0)).current;
-
-  const toggleMenu = () => {
-    if (menuVisible) {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: screenWidth,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start(() => setMenuVisible(false));
-    } else {
-      setMenuVisible(true);
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: screenWidth * 0.25,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  };
 
   const carouselData = [
     { id: '1', image: require('./assets/image1.png') },
-    { id: '2', image: require('./assets/image2.png') },
-    { id: '3', image: require('./assets/image3.png') }
+    { id: '2', image: require('./assets/image1.png') },
+    { id: '3', image: require('./assets/image1.png') }
   ];
 
   const creatorsData = [
-    { id: '1', image: require('./assets/edgar.jpg'), name: 'Edgar Feitoza De Almeida' },
-    { id: '2', image: require('./assets/matheus.jpg'), name: 'Matheus Lucindo dos Santos' },
-    { id: '3', image: require('./assets/luiss.png'), name: 'Luiz Henrique Barbosa Dias' },
+    { id: '1', image: require('./assets/image1.png'), name: 'Edgar Feitoza' },
+    { id: '2', image: require('./assets/matheus.jpg'), name: 'Matheus Lucindo' },
+    { id: '3', image: require('./assets/luis.jpg'), name: 'Luiz Henrique' },
     { id: '4', image: require('./assets/image1.png'), name: 'Luis' },
-    { id: '5', image: require('./assets/kaua.jpg'), name: 'Kauã Santos de Lima' }
+    { id: '5', image: require('./assets/.png'), name: 'LimaZ' }
   ];
 
   useEffect(() => {
@@ -123,15 +89,15 @@ const App = () => {
         </View>
 
         <View style={styles.section}>
-          <TouchableOpacity onPress={() => openModal('animation')} style={styles.card}>
+          <View style={styles.card}>
             <Image source={require('./assets/defini2.png')} style={styles.cardBackgroundImage} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('history')} style={styles.card}>
+          </View>
+          <View style={styles.card}>
             <Image source={require('./assets/historia2.png')} style={styles.cardBackgroundImage} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('reforms')} style={styles.card}>
+          </View>
+          <View style={styles.card}>
             <Image source={require('./assets/reform.png')} style={styles.cardBackgroundImage} />
-          </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.section}>
@@ -171,20 +137,19 @@ const App = () => {
         <View style={styles.sectionSeparator4}></View>
 
         <View style={styles.footer}>
-          <TouchableOpacity onPress={() => openModal('Telefone: (11) 99999-9999')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Telefone: (11) 1234-5678')} style={styles.iconTextContainer}>
             <Image source={require('./assets/fone.png')} style={styles.icon} />
             <Text style={styles.footerText}>Telefone</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('Email: networkdev2010@gmail.com')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Email: contato@portalaboris.com')} style={styles.iconTextContainer}>
             <Image source={require('./assets/email.png')} style={styles.icon} />
             <Text style={styles.footerText}>Email</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => openModal('Endereço: R. Francisco A Zeiler, 20 - Ferraz de Vasconcelos - SP,')} style={styles.iconTextContainer}>
+          <TouchableOpacity onPress={() => openModal('Endereço: Rua Exemplo, 123, São Paulo, SP')} style={styles.iconTextContainer}>
             <Image source={require('./assets/corp.png')} style={styles.icon} />
             <Text style={styles.footerText}>Endereço</Text>
           </TouchableOpacity>
         </View>
-
 
         <View style={styles.footerNote}>
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>
@@ -202,31 +167,7 @@ const App = () => {
         style={styles.modal}
       >
         <View style={styles.modalContent}>
-          
-          <Text style={styles.modalText}>
-            {modalContent === 'animation' && (
-              <>
-                <Text style={styles.modalTitle}>A Animação da CLT</Text>
-                <Text>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
-              </>
-            )}
-            {modalContent === 'history' && (
-              <>
-                <Text style={styles.modalTitle}>História da CLT</Text>
-                <Text>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
-              </>
-            )}
-            {modalContent === 'reforms' && (
-              <>
-                <Text style={styles.modalTitle}>Reformas na CLT</Text>
-                <Text>A Consolidação das Leis do Trabalho (CLT) foi instituída em 1943, durante o governo de Getúlio Vargas, com o objetivo de unificar e regulamentar as relações de trabalho no Brasil. Desde então, a CLT passou por várias reformas, refletindo as transformações econômicas, sociais e políticas do país.
-
-A reforma mais significativa ocorreu em 2017, conhecida como a Reforma Trabalhista, sancionada pela Lei nº 13.467. Essa reforma introduziu profundas mudanças na legislação trabalhista, com o intuito de modernizar as relações de trabalho e aumentar a competitividade das empresas. Entre as principais alterações, destacam-se:
-
-Independentemente das opiniões divergentes, a reforma representa um marco importante na história das relações de trabalho no Brasil, refletindo a busca por um equilíbrio entre a necessidade de modernização das leis e a preservação dos direitos dos trabalhadores. As consequências e os impactos dessas mudanças ainda estão sendo avaliados e discutidos, mas certamente moldarão o futuro do trabalho no país.</Text>
-              </>
-            )}
-          </Text>
+          <Text style={styles.modalText}>{modalContent}</Text>
           <TouchableOpacity
             style={styles.closeButton}
             onPress={() => setModalVisible(false)}
@@ -238,6 +179,7 @@ Independentemente das opiniões divergentes, a reforma representa um marco impor
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -379,10 +321,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   creatorImage: {
-    width: 230,
-    height: 230,
+    width: 200,
+    height: 200,
     backgroundColor: '#555',
-    borderRadius: 200,
+    borderRadius: 100,
     marginBottom: 10,
   },
   creatorName: {
@@ -398,9 +340,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
     top: 150,
-  },
-  messageInput: {
-    height: 150, // Aumente a altura do campo de mensagem
   },
   button: {
     backgroundColor: '#FF5C00',
@@ -436,6 +375,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 42,
     height: 42,
+    
   },
   footerText: {
     color: '#fff',
@@ -455,11 +395,6 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
-  modalImage: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
   modalText: {
     fontSize: 18,
     textAlign: 'center',
@@ -474,48 +409,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  menu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '75%',
-    height: '100%',
-    backgroundColor: '#000',
-    zIndex: 2000,
-    padding: 20,
-  },
-  menuTitle: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  menuSeparator: {
-    borderBottomColor: '#fff',
-    borderBottomWidth: 1,
-    marginBottom: 20,
-  },
-  menuButton: {
-    paddingVertical: 15,
-  },
-  menuButtonText: {
-    fontSize: 18,
-    color: '#fff',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000',
-    opacity: 0.5,
-    zIndex: 1500,
-  },
-  overlayTouchable: {
-    width: '100%',
-    height: '100%',
   },
 });
 

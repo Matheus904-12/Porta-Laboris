@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
+import { BlurView } from '@react-native-community/blur';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -80,11 +81,22 @@ const App = () => {
     setModalVisible(true);
   };
 
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
+  const openWebPage = (url) => {
+    Linking.openURL(url);
+    toggleMenu();
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
+          <TouchableOpacity onPress={toggleMenu}>
+            <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>Porta Laboris</Text>
         </View>
       </View>
@@ -161,8 +173,8 @@ const App = () => {
           <Text style={styles.sectionText3}>Preencha os Campos abaixo para entrar em contato conosco!</Text>
           <TextInput style={styles.input} placeholder="Nome" />
           <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Seu telefone (opicional)" />
-          <TextInput style={styles.input} placeholder="Mensagem" multiline />
+          <TextInput style={styles.input} placeholder="Seu telefone (opicional)" keyboardType="numeric" />
+          <TextInput style={[styles.input, styles.messageInput]} placeholder="Mensagem" multiline />
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>
@@ -185,263 +197,217 @@ const App = () => {
           </TouchableOpacity>
         </View>
 
-
         <View style={styles.footerNote}>
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>
           <Text style={styles.fottext}>Política de Privacidade - Política de Cookies</Text>
         </View>
       </ScrollView>
 
+      {menuVisible && (
+        <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
+          <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
+        </Animated.View>
+      )}
+
+      <Animated.View style={[styles.sidebar, { transform: [{ translateX }] }]}>
+        <TouchableOpacity onPress={() => openWebPage('https://github.com/MatheusLucindo')} style={styles.sidebarItem}>
+          <Text style={styles.sidebarItemText}>GitHub Matheus</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openWebPage('https://github.com/LuissHenr')} style={styles.sidebarItem}>
+          <Text style={styles.sidebarItemText}>GitHub Luis</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openWebPage('https://www.linkedin.com/in/matheuslucindo/')} style={styles.sidebarItem}>
+          <Text style={styles.sidebarItemText}>LinkedIn Matheus</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => openWebPage('https://www.linkedin.com/in/luis-henrique-barbosa-dias/')} style={styles.sidebarItem}>
+          <Text style={styles.sidebarItemText}>LinkedIn Luis</Text>
+        </TouchableOpacity>
+      </Animated.View>
+
       <Modal
         isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        useNativeDriver={true}
+        onBackdropPress={closeModal}
         animationIn="zoomIn"
         animationOut="zoomOut"
         backdropTransitionOutTiming={0}
         style={styles.modal}
       >
+        <BlurView style={styles.absolute} blurType="light" blurAmount={10} />
         <View style={styles.modalContent}>
-          
-          <Text style={styles.modalText}>
-            {modalContent === 'animation' && (
-              <>
-                <Text style={styles.modalTitle}>A Animação da CLT</Text>
-                <Text>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
-              </>
-            )}
-            {modalContent === 'history' && (
-              <>
-                <Text style={styles.modalTitle}>História da CLT</Text>
-                <Text>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
-              </>
-            )}
-            {modalContent === 'reforms' && (
-              <>
-                <Text style={styles.modalTitle}>Reformas na CLT</Text>
-                <Text>A Consolidação das Leis do Trabalho (CLT) foi instituída em 1943, durante o governo de Getúlio Vargas, com o objetivo de unificar e regulamentar as relações de trabalho no Brasil. Desde então, a CLT passou por várias reformas, refletindo as transformações econômicas, sociais e políticas do país.
-
-A reforma mais significativa ocorreu em 2017, conhecida como a Reforma Trabalhista, sancionada pela Lei nº 13.467. Essa reforma introduziu profundas mudanças na legislação trabalhista, com o intuito de modernizar as relações de trabalho e aumentar a competitividade das empresas. Entre as principais alterações, destacam-se:
-
-Independentemente das opiniões divergentes, a reforma representa um marco importante na história das relações de trabalho no Brasil, refletindo a busca por um equilíbrio entre a necessidade de modernização das leis e a preservação dos direitos dos trabalhadores. As consequências e os impactos dessas mudanças ainda estão sendo avaliados e discutidos, mas certamente moldarão o futuro do trabalho no país.</Text>
-              </>
-            )}
-          </Text>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setModalVisible(false)}
-          >
-            <Text style={styles.closeButtonText}>Fechar</Text>
+          <Text style={styles.modalText}>{modalContent}</Text>
+          <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
+            <Text style={styles.modalButtonText}>Fechar</Text>
           </TouchableOpacity>
         </View>
       </Modal>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#252843',
+    backgroundColor: '#fff',
   },
   header: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    padding: 20,
-    backgroundColor: '#fff',
-    zIndex: 1000,
+    height: 60,
+    backgroundColor: '#0019A6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
-  headerTitle: {
-    fontSize: 32,
-    color: '#000',
-    fontWeight: 'bold',
-    textAlign: 'left',
-    marginTop: 5,
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   menuIcon: {
-    width: 40,
-    height: 40,
-    marginLeft: 325,
-    top: 50,
+    width: 24,
+    height: 24,
+    marginHorizontal: 15,
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  content: {
+    flex: 1,
   },
   carousel: {
-    height: 280,
+    height: 200,
   },
   carouselImage: {
     width: screenWidth,
-    height: '100%',
-    resizeMode: 'cover',
+    height: 200,
   },
   indicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 10,
-    left: 0,
-    right: 0,
+    marginVertical: 10,
   },
   indicator: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: '#ccc',
-    marginHorizontal: 5,
+    marginHorizontal: 4,
   },
   activeIndicator: {
-    backgroundColor: '#FF6F00',
+    backgroundColor: '#333',
   },
   section: {
     padding: 20,
   },
   sectionTitle: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    textAlign: 'center',
+    fontSize: 20,
     fontWeight: 'bold',
-    top: 25,
-  },
-  sectionTitle2: {
-    fontSize: 24,
-    color: '#fff',
+    color: '#0019A6',
     marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    top: 45,
-  },
-  sectionTitle3: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    top: 75,
-  },
-  sectionSeparator: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 65,
-    width: 160,
-    alignSelf: 'center',
-  },
-  sectionSeparator3: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 95,
-    width: 160,
-    alignSelf: 'center',
-  },
-  sectionSeparator4: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 175,
-    width: 600,
-    alignSelf: 'center',
   },
   sectionText: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 50,
-  },
-  sectionText2: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 85,
-  },
-  sectionText3: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 115,
+    fontSize: 16,
+    color: '#333',
   },
   card: {
-    top: 45,
-    marginVertical: 10,
+    marginBottom: 20,
     borderRadius: 10,
-    color: '#fff',
-    fontSize: 18,
-    textAlign: 'center',
+    overflow: 'hidden',
+  },
+  cardBackgroundImage: {
+    width: '100%',
+    height: 150,
   },
   creators: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginTop: 190,
+    justifyContent: 'space-between',
   },
   creator: {
     alignItems: 'center',
-    marginHorizontal: 10,
   },
   creatorImage: {
-    width: 230,
-    height: 230,
-    backgroundColor: '#555',
-    borderRadius: 200,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     marginBottom: 10,
   },
   creatorName: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 16,
+    color: '#333',
   },
   input: {
-    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
     borderRadius: 5,
-    padding: 15,
-    marginBottom: 15,
-    fontSize: 16,
-    top: 150,
+    padding: 10,
+    marginVertical: 10,
   },
   messageInput: {
-    height: 150, // Aumente a altura do campo de mensagem
+    height: 100,
+    textAlignVertical: 'top',
   },
   button: {
-    backgroundColor: '#FF5C00',
-    padding: 15,
+    backgroundColor: '#0019A6',
     borderRadius: 5,
+    padding: 15,
     alignItems: 'center',
-    top: 165,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
   },
   footer: {
-    padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 200,
-  },
-  fottext: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  footerNote: {
     padding: 20,
-    alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#0019A6',
   },
   iconTextContainer: {
     alignItems: 'center',
-    top: -20,
   },
   icon: {
-    width: 42,
-    height: 42,
+    width: 24,
+    height: 24,
+    marginBottom: 5,
   },
   footerText: {
     color: '#fff',
-    marginTop: 5,
-    fontWeight: 'bold',
-    fontSize: 17,
+    fontSize: 12,
+  },
+  footerNote: {
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#0019A6',
+  },
+  fottext: {
+    color: '#fff',
+    fontSize: 12,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  overlayTouchable: {
+    flex: 1,
+  },
+  sidebar: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: '75%',
+    backgroundColor: '#fff',
+    zIndex: 2,
+  },
+  sidebarItem: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  sidebarItemText: {
+    fontSize: 16,
   },
   modal: {
     justifyContent: 'center',
@@ -450,72 +416,27 @@ const styles = StyleSheet.create({
   modalContent: {
     backgroundColor: 'white',
     padding: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 4,
     borderColor: 'rgba(0, 0, 0, 0.1)',
-  },
-  modalImage: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+    alignItems: 'center',
   },
   modalText: {
     fontSize: 18,
-    textAlign: 'center',
+    marginBottom: 12,
   },
-  closeButton: {
-    marginTop: 10,
-    backgroundColor: '#FF5C00',
-    padding: 10,
+  modalButton: {
+    backgroundColor: '#0019A6',
     borderRadius: 5,
+    padding: 10,
+    alignItems: 'center',
   },
-  closeButtonText: {
-    color: 'white',
+  modalButtonText: {
+    color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
   },
-  menu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '75%',
-    height: '100%',
-    backgroundColor: '#000',
-    zIndex: 2000,
-    padding: 20,
-  },
-  menuTitle: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  menuSeparator: {
-    borderBottomColor: '#fff',
-    borderBottomWidth: 1,
-    marginBottom: 20,
-  },
-  menuButton: {
-    paddingVertical: 15,
-  },
-  menuButtonText: {
-    fontSize: 18,
-    color: '#fff',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000',
-    opacity: 0.5,
-    zIndex: 1500,
-  },
-  overlayTouchable: {
-    width: '100%',
-    height: '100%',
+  absolute: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: -1,
   },
 });
 
