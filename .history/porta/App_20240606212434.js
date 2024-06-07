@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
+import { BlurView } from '@react-native-community/blur';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -11,44 +12,11 @@ const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
-  const translateX = useRef(new Animated.Value(screenWidth)).current;
-  const overlayOpacity = useRef(new Animated.Value(0)).current;
-
-  const toggleMenu = () => {
-    if (menuVisible) {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: screenWidth,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start(() => setMenuVisible(false));
-    } else {
-      setMenuVisible(true);
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: screenWidth * 0.25,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  };
 
   const carouselData = [
     { id: '1', image: require('./assets/image1.png') },
-    { id: '2', image: require('./assets/image2.png') },
-    { id: '3', image: require('./assets/image3.png') }
+    { id: '2', image: require('./assets/image1.png') },
+    { id: '3', image: require('./assets/image1.png') }
   ];
 
   const creatorsData = [
@@ -80,9 +48,8 @@ const App = () => {
     setModalVisible(true);
   };
 
-  const openWebPage = (url) => {
-    Linking.openURL(url);
-    toggleMenu();
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
   };
 
   return (
@@ -95,6 +62,25 @@ const App = () => {
           <Text style={styles.headerTitle}>Porta Laboris</Text>
         </View>
       </View>
+
+      <Modal
+        isVisible={menuVisible}
+        onBackdropPress={toggleMenu}
+        backdropTransitionOutTiming={0}
+        animationIn="slideInRight"
+        animationOut="slideOutRight"
+        style={styles.menuModal}
+      >
+        <View style={styles.menu}>
+          <Text style={styles.menuItem}>Home</Text>
+          <Text style={styles.menuItem}>About</Text>
+          <Text style={styles.menuItem}>Contact</Text>
+        </View>
+      </Modal>
+
+      {menuVisible && (
+        <BlurView style={styles.absolute} blurType="light" blurAmount={10} />
+      )}
 
       <ScrollView style={styles.content}>
         <View style={styles.carousel}>
@@ -132,12 +118,15 @@ const App = () => {
         <View style={styles.section}>
           <TouchableOpacity onPress={() => openModal('animation')} style={styles.card}>
             <Image source={require('./assets/defini2.png')} style={styles.cardBackgroundImage} />
+            <Text style={styles.cardText}>Animação da CLT</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => openModal('history')} style={styles.card}>
             <Image source={require('./assets/historia2.png')} style={styles.cardBackgroundImage} />
+            <Text style={styles.cardText}>História da CLT</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => openModal('reforms')} style={styles.card}>
             <Image source={require('./assets/reform.png')} style={styles.cardBackgroundImage} />
+            <Text style={styles.cardText}>Reformas na CLT</Text>
           </TouchableOpacity>
         </View>
 
@@ -198,22 +187,48 @@ const App = () => {
         </View>
       </ScrollView>
 
-      {menuVisible && (
-        <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
-          <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
-        </Animated.View>
-      )}
-
-      <Animated.View style={[styles.menu, { transform: [{ translateX }] }]}>
-        <Text style={styles.menuTitle}>Menu</Text>
-        <View style={styles.menuSeparator}></View>
-        <TouchableOpacity style={styles.menuButton} onPress={() => openWebPage('https://example.com/page1')}>
-          <Text style={styles.menuButtonText}>Página 1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton} onPress={() => openWebPage('https://example.com/page2')}>
-          <Text style={styles.menuButtonText}>Página 2</Text>
-        </TouchableOpacity>
-      </Animated.View>
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        useNativeDriver={true}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        backdropTransitionOutTiming={0}
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          {modalContent === 'animation' && (
+            <>
+              <Text style={styles.modalTitle}>Animação da CLT</Text>
+              <Text style={styles.modalText}>Aqui estaria uma animação explicando a CLT...</Text>
+            </>
+          )}
+          {modalContent === 'history' && (
+            <>
+              <Text style={styles.modalTitle}>História da CLT</Text>
+              <Text style={styles.modalText}>A CLT foi criada em...</Text>
+            </>
+          )}
+          {modalContent === 'reforms' && (
+            <>
+              <Text style={styles.modalTitle}>Reformas na CLT</Text>
+              <Text style={styles.modalText}>As reformas mais recentes e como elas afetam os trabalhadores...</Text>
+            </>
+          )}
+          {modalContent !== 'animation' && modalContent !== 'history' && modalContent !== 'reforms' && (
+            <>
+              <Text style={styles.modalTitle}>Contato</Text>
+              <Text style={styles.modalText}>{modalContent}</Text>
+            </>
+          )}
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.closeButtonText}>Fechar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -224,26 +239,51 @@ const styles = StyleSheet.create({
     backgroundColor: '#252843',
   },
   header: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
     padding: 20,
     backgroundColor: '#fff',
     zIndex: 1000,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 32,
     color: '#000',
     fontWeight: 'bold',
-    textAlign: 'left',
-    marginTop: 5,
+    marginLeft: 10,
   },
   menuIcon: {
     width: 40,
     height: 40,
-    marginLeft: 325,
-    top: 50,
+  },
+  menuModal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  menu: {
+    backgroundColor: '#fff',
+    padding: 10,
+    width: '80%',
+    height: '100%',
+    position: 'absolute',
+    right: 0,
+  },
+  menuItem: {
+    paddingVertical: 10,
+    fontSize: 18,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   carousel: {
     height: 280,
@@ -280,7 +320,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     fontWeight: 'bold',
-    top: 25,
   },
   sectionTitle2: {
     fontSize: 24,
@@ -288,7 +327,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     fontWeight: 'bold',
-    top: 45,
   },
   sectionTitle3: {
     fontSize: 24,
@@ -296,13 +334,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     fontWeight: 'bold',
-    top: 75,
   },
   sectionSeparator: {
     borderBottomColor: 'white',
     borderBottomWidth: 1,
     marginBottom: 10,
-    top: 65,
     width: 160,
     alignSelf: 'center',
   },
@@ -310,7 +346,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 1,
     marginBottom: 10,
-    top: 95,
     width: 160,
     alignSelf: 'center',
   },
@@ -318,41 +353,46 @@ const styles = StyleSheet.create({
     borderBottomColor: 'white',
     borderBottomWidth: 1,
     marginBottom: 10,
-    top: 175,
-    width: 600,
+    width: '100%',
     alignSelf: 'center',
   },
   sectionText: {
     fontSize: 17,
     color: '#fff',
     textAlign: 'center',
-    top: 50,
   },
   sectionText2: {
     fontSize: 17,
     color: '#fff',
     textAlign: 'center',
-    top: 85,
   },
   sectionText3: {
     fontSize: 17,
     color: '#fff',
     textAlign: 'center',
-    top: 115,
   },
   card: {
-    top: 45,
     marginVertical: 10,
     borderRadius: 10,
+    overflow: 'hidden',
+  },
+  cardBackgroundImage: {
+    width: '100%',
+    height: 150,
+    resizeMode: 'cover',
+  },
+  cardText: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
     color: '#fff',
     fontSize: 18,
-    textAlign: 'center',
+    fontWeight: 'bold',
   },
   creators: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 190,
   },
   creator: {
     alignItems: 'center',
@@ -377,17 +417,15 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
-    top: 150,
   },
   messageInput: {
-    height: 150, // Aumente a altura do campo de mensagem
+    height: 150,
   },
   button: {
     backgroundColor: '#FF5C00',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
-    top: 165,
   },
   buttonText: {
     color: '#fff',
@@ -398,7 +436,6 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 200,
   },
   fottext: {
     color: '#fff',
@@ -411,7 +448,6 @@ const styles = StyleSheet.create({
   },
   iconTextContainer: {
     alignItems: 'center',
-    top: -20,
   },
   icon: {
     width: 42,
@@ -440,6 +476,11 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 20,
   },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
   modalText: {
     fontSize: 18,
     textAlign: 'center',
@@ -454,48 +495,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  menu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '75%',
-    height: '100%',
-    backgroundColor: '#000',
-    zIndex: 2000,
-    padding: 20,
-  },
-  menuTitle: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  menuSeparator: {
-    borderBottomColor: '#fff',
-    borderBottomWidth: 1,
-    marginBottom: 20,
-  },
-  menuButton: {
-    paddingVertical: 15,
-  },
-  menuButtonText: {
-    fontSize: 18,
-    color: '#fff',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000',
-    opacity: 0.5,
-    zIndex: 1500,
-  },
-  overlayTouchable: {
-    width: '100%',
-    height: '100%',
   },
 });
 

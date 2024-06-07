@@ -48,7 +48,7 @@ const App = () => {
   const carouselData = [
     { id: '1', image: require('./assets/image1.png') },
     { id: '2', image: require('./assets/image2.png') },
-    { id: '3', image: require('./assets/image3.png') }
+    { id: '3', image: require('./assets/image1.png') }
   ];
 
   const creatorsData = [
@@ -89,9 +89,7 @@ const App = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={toggleMenu}>
-            <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
-          </TouchableOpacity>
+          <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
           <Text style={styles.headerTitle}>Porta Laboris</Text>
         </View>
       </View>

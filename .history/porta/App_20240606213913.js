@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -11,44 +12,13 @@ const App = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
-  const translateX = useRef(new Animated.Value(screenWidth)).current;
-  const overlayOpacity = useRef(new Animated.Value(0)).current;
-
-  const toggleMenu = () => {
-    if (menuVisible) {
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: screenWidth,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start(() => setMenuVisible(false));
-    } else {
-      setMenuVisible(true);
-      Animated.parallel([
-        Animated.timing(translateX, {
-          toValue: screenWidth * 0.25,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.timing(overlayOpacity, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  };
+  const [translateX] = useState(new Animated.Value(screenWidth));
+  const [overlayOpacity] = useState(new Animated.Value(0));
 
   const carouselData = [
     { id: '1', image: require('./assets/image1.png') },
-    { id: '2', image: require('./assets/image2.png') },
-    { id: '3', image: require('./assets/image3.png') }
+    { id: '2', image: require('./assets/image1.png') },
+    { id: '3', image: require('./assets/image1.png') }
   ];
 
   const creatorsData = [
@@ -80,20 +50,44 @@ const App = () => {
     setModalVisible(true);
   };
 
-  const openWebPage = (url) => {
-    Linking.openURL(url);
-    toggleMenu();
+  const toggleMenu = () => {
+    if (menuVisible) {
+      Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: screenWidth,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(overlayOpacity, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start(() => setMenuVisible(false));
+    } else {
+      setMenuVisible(true);
+      Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(overlayOpacity, {
+          toValue: 0.5,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <View style={styles.headerContent}>
-          <TouchableOpacity onPress={toggleMenu}>
-            <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Porta Laboris</Text>
-        </View>
+        <TouchableOpacity onPress={toggleMenu}>
+          <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Porta Laboris</Text>
       </View>
 
       <ScrollView style={styles.content}>
@@ -205,15 +199,52 @@ const App = () => {
       )}
 
       <Animated.View style={[styles.menu, { transform: [{ translateX }] }]}>
-        <Text style={styles.menuTitle}>Menu</Text>
-        <View style={styles.menuSeparator}></View>
-        <TouchableOpacity style={styles.menuButton} onPress={() => openWebPage('https://example.com/page1')}>
-          <Text style={styles.menuButtonText}>Página 1</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton} onPress={() => openWebPage('https://example.com/page2')}>
-          <Text style={styles.menuButtonText}>Página 2</Text>
+        <Text style={styles.menuItem}>Menu Item 1</Text>
+        <Text style={styles.menuItem}>Menu Item 2</Text>
+        <Text style={styles.menuItem}>Menu Item 3</Text>
+        <TouchableOpacity onPress={toggleMenu}>
+          <Text style={styles.closeMenu}>Fechar Menu</Text>
         </TouchableOpacity>
       </Animated.View>
+
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        useNativeDriver={true}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        backdropTransitionOutTiming={0}
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>
+            {modalContent === 'animation' && (
+              <>
+                <Text style={styles.modalTitle}>A Animação da CLT</Text>
+                <Text>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
+              </>
+            )}
+            {modalContent === 'history' && (
+              <>
+                <Text style={styles.modalTitle}>História da CLT</Text>
+                <Text>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
+              </>
+            )}
+            {modalContent === 'reforms' && (
+              <>
+                <Text style={styles.modalTitle}>Reformas na CLT</Text>
+                <Text>Desde sua criação, a CLT passou por diversas reformas. Saiba mais sobre as mudanças mais recentes e como elas afetam os trabalhadores...</Text>
+              </>
+            )}
+          </Text>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.closeButtonText}>Fechar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -423,6 +454,37 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 17,
   },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 999,
+  },
+  overlayTouchable: {
+    flex: 1,
+  },
+  menu: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: screenWidth * 0.75,
+    height: '100%',
+    backgroundColor: '#fff',
+    zIndex: 1000,
+    padding: 20,
+  },
+  menuItem: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  closeMenu: {
+    fontSize: 18,
+    color: 'red',
+    marginTop: 20,
+  },
   modal: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -454,48 +516,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  menu: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: '75%',
-    height: '100%',
-    backgroundColor: '#000',
-    zIndex: 2000,
-    padding: 20,
-  },
-  menuTitle: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    fontWeight: 'bold',
-  },
-  menuSeparator: {
-    borderBottomColor: '#fff',
-    borderBottomWidth: 1,
-    marginBottom: 20,
-  },
-  menuButton: {
-    paddingVertical: 15,
-  },
-  menuButtonText: {
-    fontSize: 18,
-    color: '#fff',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#000',
-    opacity: 0.5,
-    zIndex: 1500,
-  },
-  overlayTouchable: {
-    width: '100%',
-    height: '100%',
   },
 });
 

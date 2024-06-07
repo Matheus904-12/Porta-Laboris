@@ -89,9 +89,7 @@ const App = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={toggleMenu}>
-            <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
-          </TouchableOpacity>
+          <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
           <Text style={styles.headerTitle}>Porta Laboris</Text>
         </View>
       </View>
