@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 
@@ -117,10 +117,6 @@ const App = () => {
       default:
         return <Text style={styles.modalText}>{modalContent}</Text>;
     }
-  };
-
-  const openLink = (url) => {
-    Linking.openURL(url);
   };
 
   return (
@@ -261,23 +257,13 @@ const App = () => {
       )}
 
       <Animated.View style={[styles.sideMenu, { transform: [{ translateX }] }]}>
-        <Text style={styles.menuTitle}>Refêrencias</Text>
-        
-        <TouchableOpacity onPress={() => openLink('https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm')}>
-          <Text style={styles.menuItem}>Consolidação - GOV.BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/carteira-de-trabalho')}>
-          <Text style={styles.menuItem}>Emprega Brasil - GOV.BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www2.senado.leg.br/bdsf/bitstream/handle/id/535468/clt_e_normas_correlatas_1ed.pdf')}>
-          <Text style={styles.menuItem}>Senado Federal - BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.portaldaindustria.com.br/industria-de-a-z/o-que-e-legislacao-trabalhista/')}>
-          <Text style={styles.menuItem}>Portal da Indústria - SESI/SENAI</Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={toggleMenu}>
           <Text style={styles.closeMenuButton}>Fechar Menu</Text>
         </TouchableOpacity>
+        <Text style={styles.menuItem}>Home</Text>
+        <Text style={styles.menuItem}>Sobre</Text>
+        <Text style={styles.menuItem}>Serviços</Text>
+        <Text style={styles.menuItem}>Contato</Text>
       </Animated.View>
     </View>
   );
@@ -535,47 +521,27 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     zIndex: 1,
+  },
+  overlayTouchable: {
+    flex: 1,
   },
   sideMenu: {
     position: 'absolute',
-    top: 120,
+    top: 0,
     bottom: 0,
     left: 0,
     width: '75%',
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     zIndex: 2,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  menuTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#fff',
-    top: 33,
   },
   menuItem: {
     fontSize: 18,
     marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    top: 55,
   },
-  closeMenuButton: {
-    fontSize: 18,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#FF5C00',
-    textAlign: 'center',
-    top: 123,
-  },
+
 });
 
 export default App;

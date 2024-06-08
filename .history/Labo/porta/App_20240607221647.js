@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 
@@ -13,7 +13,6 @@ const App = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const translateX = useRef(new Animated.Value(screenWidth)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
-  const modalRef = useRef(null);
 
   const toggleMenu = () => {
     if (menuVisible) {
@@ -81,16 +80,6 @@ const App = () => {
     setModalVisible(true);
   };
 
-  const closeModal = () => {
-    if (modalRef.current) {
-      modalRef.current.animate('bounceOut', 500).then(() => {
-        setModalVisible(false);
-      });
-    } else {
-      setModalVisible(false);
-    }
-  };
-
   const renderModalContent = () => {
     switch (modalContent) {
       case 'animation':
@@ -119,17 +108,11 @@ const App = () => {
     }
   };
 
-  const openLink = (url) => {
-    Linking.openURL(url);
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={toggleMenu}>
-            <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
-          </TouchableOpacity>
+          <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
           <Text style={styles.headerTitle}>Porta Laboris</Text>
         </View>
       </View>
@@ -237,48 +220,17 @@ const App = () => {
 
         <Modal
           isVisible={modalVisible}
-          onBackdropPress={closeModal}
+          onBackdropPress={() => setModalVisible(false)}
           style={styles.modal}
         >
-          <Animatable.View
-            ref={modalRef}
-            animation="bounceIn"
-            duration={1500}
-            style={styles.modalContent}
-          >
+          <Animatable.View animation="bounceIn" duration={1500} style={styles.modalContent}>
             {renderModalContent()}
-            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
+            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalButton}>
               <Text style={styles.modalButtonText}>Fechar</Text>
             </TouchableOpacity>
           </Animatable.View>
         </Modal>
       </ScrollView>
-
-      {menuVisible && (
-        <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
-          <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
-        </Animated.View>
-      )}
-
-      <Animated.View style={[styles.sideMenu, { transform: [{ translateX }] }]}>
-        <Text style={styles.menuTitle}>Refêrencias</Text>
-        
-        <TouchableOpacity onPress={() => openLink('https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm')}>
-          <Text style={styles.menuItem}>Consolidação - GOV.BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/carteira-de-trabalho')}>
-          <Text style={styles.menuItem}>Emprega Brasil - GOV.BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www2.senado.leg.br/bdsf/bitstream/handle/id/535468/clt_e_normas_correlatas_1ed.pdf')}>
-          <Text style={styles.menuItem}>Senado Federal - BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.portaldaindustria.com.br/industria-de-a-z/o-que-e-legislacao-trabalhista/')}>
-          <Text style={styles.menuItem}>Portal da Indústria - SESI/SENAI</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Text style={styles.closeMenuButton}>Fechar Menu</Text>
-        </TouchableOpacity>
-      </Animated.View>
     </View>
   );
 };
@@ -505,7 +457,7 @@ const styles = StyleSheet.create({
   modalButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#FF5C00',
+    backgroundColor: '##FF5C00',
     borderRadius: 5,
     alignItems: 'center',
   },
@@ -533,48 +485,47 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    zIndex: 1,
-  },
-  sideMenu: {
+  menu: {
     position: 'absolute',
-    top: 120,
-    bottom: 0,
-    left: 0,
+    top: 0,
+    right: 0,
     width: '75%',
+    height: '100%',
     backgroundColor: '#000',
-    zIndex: 2,
+    zIndex: 2000,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
   },
   menuTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
     color: '#fff',
-    top: 33,
-  },
-  menuItem: {
-    fontSize: 18,
-    marginBottom: 20,
+    marginBottom: 10,
     fontWeight: 'bold',
+  },
+  menuSeparator: {
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    marginBottom: 20,
+  },
+  menuButton: {
+    paddingVertical: 15,
+  },
+  menuButtonText: {
+    fontSize: 18,
     color: '#fff',
-    top: 55,
   },
-  closeMenuButton: {
-    fontSize: 18,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#FF5C00',
-    textAlign: 'center',
-    top: 123,
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000',
+    opacity: 0.5,
+    zIndex: 1500,
+  },
+  overlayTouchable: {
+    width: '100%',
+    height: '100%',
   },
 });
 

@@ -273,7 +273,7 @@ const App = () => {
           <Text style={styles.menuItem}>Senado Federal - BR</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => openLink('https://www.portaldaindustria.com.br/industria-de-a-z/o-que-e-legislacao-trabalhista/')}>
-          <Text style={styles.menuItem}>Portal da Indústria - SESI/SENAI</Text>
+          <Text style={styles.menuItem}>Portal da Indústria - SESI </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleMenu}>
           <Text style={styles.closeMenuButton}>Fechar Menu</Text>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
+import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
 
@@ -13,7 +13,6 @@ const App = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const translateX = useRef(new Animated.Value(screenWidth)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
-  const modalRef = useRef(null);
 
   const toggleMenu = () => {
     if (menuVisible) {
@@ -79,48 +78,6 @@ const App = () => {
   const openModal = (content) => {
     setModalContent(content);
     setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    if (modalRef.current) {
-      modalRef.current.animate('bounceOut', 500).then(() => {
-        setModalVisible(false);
-      });
-    } else {
-      setModalVisible(false);
-    }
-  };
-
-  const renderModalContent = () => {
-    switch (modalContent) {
-      case 'animation':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>A Animação da CLT</Text>
-            <Text style={styles.modalText}>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
-          </ScrollView>
-        );
-      case 'history':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>História da CLT</Text>
-            <Text style={styles.modalText}>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
-          </ScrollView>
-        );
-      case 'reforms':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>Reformas na CLT</Text>
-            <Text style={styles.modalText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor. Maecenas nisl est, ultrices nec congue eget, auctor vitae massa...</Text>
-          </ScrollView>
-        );
-      default:
-        return <Text style={styles.modalText}>{modalContent}</Text>;
-    }
-  };
-
-  const openLink = (url) => {
-    Linking.openURL(url);
   };
 
   return (
@@ -234,24 +191,6 @@ const App = () => {
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>
           <Text style={styles.fottext}>Política de Privacidade - Política de Cookies</Text>
         </View>
-
-        <Modal
-          isVisible={modalVisible}
-          onBackdropPress={closeModal}
-          style={styles.modal}
-        >
-          <Animatable.View
-            ref={modalRef}
-            animation="bounceIn"
-            duration={1500}
-            style={styles.modalContent}
-          >
-            {renderModalContent()}
-            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Fechar</Text>
-            </TouchableOpacity>
-          </Animatable.View>
-        </Modal>
       </ScrollView>
 
       {menuVisible && (
@@ -260,25 +199,28 @@ const App = () => {
         </Animated.View>
       )}
 
-      <Animated.View style={[styles.sideMenu, { transform: [{ translateX }] }]}>
-        <Text style={styles.menuTitle}>Refêrencias</Text>
-        
-        <TouchableOpacity onPress={() => openLink('https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm')}>
-          <Text style={styles.menuItem}>Consolidação - GOV.BR</Text>
+      <Animated.View style={[styles.menu, { transform: [{ translateX }] }]}>
+        <Text style={styles.menuTitle}>Menu</Text>
+        <View style={styles.menuSeparator} />
+        <TouchableOpacity style={styles.menuButton}>
+          <Text style={styles.menuButtonText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/carteira-de-trabalho')}>
-          <Text style={styles.menuItem}>Emprega Brasil - GOV.BR</Text>
+        <TouchableOpacity style={styles.menuButton}>
+          <Text style={styles.menuButtonText}>Sobre nós</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www2.senado.leg.br/bdsf/bitstream/handle/id/535468/clt_e_normas_correlatas_1ed.pdf')}>
-          <Text style={styles.menuItem}>Senado Federal - BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.portaldaindustria.com.br/industria-de-a-z/o-que-e-legislacao-trabalhista/')}>
-          <Text style={styles.menuItem}>Portal da Indústria - SESI/SENAI</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Text style={styles.closeMenuButton}>Fechar Menu</Text>
+        <TouchableOpacity style={styles.menuButton}>
+          <Text style={styles.menuButtonText}>Contato</Text>
         </TouchableOpacity>
       </Animated.View>
+
+      <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{modalContent}</Text>
+          <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+            <Text style={styles.closeButtonText}>Fechar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -286,295 +228,187 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#252843',
+    backgroundColor: '#fff',
   },
   header: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    padding: 20,
-    backgroundColor: '#fff',
-    zIndex: 1000,
+    backgroundColor: '#1E90FF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
-  headerTitle: {
-    fontSize: 32,
-    color: '#000',
-    fontWeight: 'bold',
-    textAlign: 'left',
-    marginTop: 5,
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   menuIcon: {
-    width: 40,
-    height: 40,
-    marginLeft: 325,
-    top: 50,
+    width: 30,
+    height: 30,
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  content: {
+    flex: 1,
   },
   carousel: {
-    height: 280,
+    marginTop: 10,
   },
   carouselImage: {
     width: screenWidth,
-    height: '100%',
+    height: 200,
     resizeMode: 'cover',
   },
   indicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 10,
-    left: 0,
-    right: 0,
+    marginTop: 10,
   },
   indicator: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
     backgroundColor: '#ccc',
     marginHorizontal: 5,
   },
   activeIndicator: {
-    backgroundColor: '#FF6F00',
+    backgroundColor: '#1E90FF',
   },
   section: {
     padding: 20,
   },
   sectionTitle: {
     fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    textAlign: 'center',
     fontWeight: 'bold',
-    top: 25,
-  },
-  sectionTitle2: {
-    fontSize: 24,
-    color: '#fff',
     marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    top: 45,
-  },
-  sectionTitle3: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    top: 75,
-  },
-  sectionSeparator: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 65,
-    width: 160,
-    alignSelf: 'center',
-  },
-  sectionSeparator3: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 95,
-    width: 160,
-    alignSelf: 'center',
-  },
-  sectionSeparator4: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 175,
-    width: 600,
-    alignSelf: 'center',
   },
   sectionText: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 50,
-  },
-  sectionText2: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 85,
-  },
-  sectionText3: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 115,
+    fontSize: 16,
+    lineHeight: 24,
   },
   card: {
-    top: 45,
     marginVertical: 10,
+    height: 150,
     borderRadius: 10,
-    color: '#fff',
-    fontSize: 18,
-    textAlign: 'center',
+    overflow: 'hidden',
+  },
+  cardBackgroundImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   creators: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 190,
+    flexWrap: 'wrap',
   },
   creator: {
     alignItems: 'center',
-    marginHorizontal: 10,
+    margin: 10,
   },
   creatorImage: {
-    width: 230,
-    height: 230,
-    backgroundColor: '#555',
-    borderRadius: 200,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     marginBottom: 10,
   },
   creatorName: {
-    color: '#fff',
-    textAlign: 'center',
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   input: {
-    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
     borderRadius: 5,
-    padding: 15,
-    marginBottom: 15,
-    fontSize: 16,
-    top: 150,
-  },
-  messageInput: {
-    height: 150, // Aumente a altura do campo de mensagem
+    marginBottom: 10,
   },
   button: {
-    backgroundColor: '#FF5C00',
+    backgroundColor: '#1E90FF',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
-    top: 165,
   },
   buttonText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
   },
   footer: {
-    padding: 20,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 200,
-  },
-  fottext: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  footerNote: {
     padding: 20,
-    alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#f0f0f0',
   },
   iconTextContainer: {
     alignItems: 'center',
-    top: -20,
   },
   icon: {
-    width: 42,
-    height: 42,
+    width: 40,
+    height: 40,
+    marginBottom: 5,
   },
   footerText: {
-    color: '#fff',
-    marginTop: 5,
-    fontWeight: 'bold',
-    fontSize: 17,
-  },
-  modal: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: screenWidth * 0.9,
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    maxHeight: '80%',
-  },
-  modalScroll: {
-    maxHeight: '70%',
-  },
-  modalButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#FF5C00',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  modalText: {
-    fontSize: 16,
-    color: '#666',
-  },
-  closeButton: {
-    marginTop: 10,
-    backgroundColor: '#FF5C00',
-    padding: 10,
-    borderRadius: 5,
-  },
-  closeButtonText: {
-    color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    zIndex: 1,
-  },
-  sideMenu: {
     position: 'absolute',
-    top: 120,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 1000,
+  },
+  overlayTouchable: {
+    flex: 1,
+  },
+  menu: {
+    position: 'absolute',
+    top: 0,
     bottom: 0,
     left: 0,
-    width: '75%',
-    backgroundColor: '#000',
-    zIndex: 2,
+    width: screenWidth * 0.75,
+    backgroundColor: '#fff',
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    zIndex: 1001,
   },
   menuTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#fff',
-    top: 33,
   },
-  menuItem: {
-    fontSize: 18,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    top: 55,
+  menuSeparator: {
+    height: 2,
+    backgroundColor: '#ccc',
+    marginVertical: 10,
   },
-  closeMenuButton: {
+  menuButton: {
+    paddingVertical: 10,
+  },
+  menuButtonText: {
     fontSize: 18,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#FF5C00',
-    textAlign: 'center',
-    top: 123,
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+  },
+  modalText: {
+    fontSize: 16,
+  },
+  closeButton: {
+    marginTop: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#1E90FF',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });
 

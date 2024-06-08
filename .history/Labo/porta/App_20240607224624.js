@@ -269,11 +269,11 @@ const App = () => {
         <TouchableOpacity onPress={() => openLink('https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/carteira-de-trabalho')}>
           <Text style={styles.menuItem}>Emprega Brasil - GOV.BR</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www2.senado.leg.br/bdsf/bitstream/handle/id/535468/clt_e_normas_correlatas_1ed.pdf')}>
-          <Text style={styles.menuItem}>Senado Federal - BR</Text>
+        <TouchableOpacity onPress={() => openLink('https://example.com/servicos')}>
+          <Text style={styles.menuItem}>Snenado Federal - BR</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.portaldaindustria.com.br/industria-de-a-z/o-que-e-legislacao-trabalhista/')}>
-          <Text style={styles.menuItem}>Portal da Indústria - SESI/SENAI</Text>
+        <TouchableOpacity onPress={() => openLink('https://example.com/contato')}>
+          <Text style={styles.menuItem}>Contato</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={toggleMenu}>
           <Text style={styles.closeMenuButton}>Fechar Menu</Text>

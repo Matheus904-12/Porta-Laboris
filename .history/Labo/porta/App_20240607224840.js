@@ -262,7 +262,8 @@ const App = () => {
 
       <Animated.View style={[styles.sideMenu, { transform: [{ translateX }] }]}>
         <Text style={styles.menuTitle}>Refêrencias</Text>
-        
+        <View style={styles.sectionSeparator4}></View>
+
         <TouchableOpacity onPress={() => openLink('https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm')}>
           <Text style={styles.menuItem}>Consolidação - GOV.BR</Text>
         </TouchableOpacity>

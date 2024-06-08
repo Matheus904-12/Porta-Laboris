@@ -13,7 +13,6 @@ const App = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const translateX = useRef(new Animated.Value(screenWidth)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
-  const modalRef = useRef(null);
 
   const toggleMenu = () => {
     if (menuVisible) {
@@ -81,55 +80,11 @@ const App = () => {
     setModalVisible(true);
   };
 
-  const closeModal = () => {
-    if (modalRef.current) {
-      modalRef.current.animate('bounceOut', 500).then(() => {
-        setModalVisible(false);
-      });
-    } else {
-      setModalVisible(false);
-    }
-  };
-
-  const renderModalContent = () => {
-    switch (modalContent) {
-      case 'animation':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>A Animação da CLT</Text>
-            <Text style={styles.modalText}>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
-          </ScrollView>
-        );
-      case 'history':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>História da CLT</Text>
-            <Text style={styles.modalText}>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
-          </ScrollView>
-        );
-      case 'reforms':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>Reformas na CLT</Text>
-            <Text style={styles.modalText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor. Maecenas nisl est, ultrices nec congue eget, auctor vitae massa...</Text>
-          </ScrollView>
-        );
-      default:
-        return <Text style={styles.modalText}>{modalContent}</Text>;
-    }
-  };
-
-  const openLink = (url) => {
-    Linking.openURL(url);
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          <TouchableOpacity onPress={toggleMenu}>
-            <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
-          </TouchableOpacity>
+          <Image source={require('./assets/menu.png')} style={styles.menuIcon} />
           <Text style={styles.headerTitle}>Porta Laboris</Text>
         </View>
       </View>
@@ -230,59 +185,75 @@ const App = () => {
           </TouchableOpacity>
         </View>
 
+
         <View style={styles.footerNote}>
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>
           <Text style={styles.fottext}>Política de Privacidade - Política de Cookies</Text>
         </View>
-
-        <Modal
-          isVisible={modalVisible}
-          onBackdropPress={closeModal}
-          style={styles.modal}
-        >
-          <Animatable.View
-            ref={modalRef}
-            animation="bounceIn"
-            duration={1500}
-            style={styles.modalContent}
-          >
-            {renderModalContent()}
-            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Fechar</Text>
-            </TouchableOpacity>
-          </Animatable.View>
-        </Modal>
       </ScrollView>
 
-      {menuVisible && (
-        <Animated.View style={[styles.overlay, { opacity: overlayOpacity }]}>
-          <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
-        </Animated.View>
-      )}
+      <Modal
+        isVisible={modalVisible}
+        onBackdropPress={() => setModalVisible(false)}
+        useNativeDriver={true}
+        animationIn="zoomIn"
+        animationOut="zoomOut"
+        backdropTransitionOutTiming={0}
+        style={styles.modal}
+      >
+        <View style={styles.modalContent}>
+          
+          <Text style={styles.modalText}>
+            {modalContent === 'animation' && (
+              <>
+                <Text style={styles.modalTitle}>A Animação da CLT</Text>
+                <Text>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
+              </>
+            )}
+            {modalContent === 'history' && (
+              <>
+                <Text style={styles.modalTitle}>História da CLT</Text>
+                <Text>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
+              </>
+            )}
+            {modalContent === 'reforms' && (
+              <>
+                <Text style={styles.modalTitle}>Reformas na CLT</Text>
+                <Text>A Consolidação das Leis do Trabalho (CLT) foi instituída em 1943, durante o governo de Getúlio Vargas, com o objetivo de unificar e regulamentar as relações de trabalho no Brasil. Desde então, a CLT passou por várias reformas, refletindo as transformações econômicas, sociais e políticas do país.
 
-      <Animated.View style={[styles.sideMenu, { transform: [{ translateX }] }]}>
-        <Text style={styles.menuTitle}>Refêrencias</Text>
-        
-        <TouchableOpacity onPress={() => openLink('https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm')}>
-          <Text style={styles.menuItem}>Consolidação - GOV.BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/carteira-de-trabalho')}>
-          <Text style={styles.menuItem}>Emprega Brasil - GOV.BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www2.senado.leg.br/bdsf/bitstream/handle/id/535468/clt_e_normas_correlatas_1ed.pdf')}>
-          <Text style={styles.menuItem}>Senado Federal - BR</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.portaldaindustria.com.br/industria-de-a-z/o-que-e-legislacao-trabalhista/')}>
-          <Text style={styles.menuItem}>Portal da Indústria - SESI/SENAI</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Text style={styles.closeMenuButton}>Fechar Menu</Text>
-        </TouchableOpacity>
-      </Animated.View>
+A reforma mais significativa ocorreu em 2017, conhecida como a Reforma Trabalhista, sancionada pela Lei nº 13.467. Essa reforma introduziu profundas mudanças na legislação trabalhista, com o intuito de modernizar as relações de trabalho e aumentar a competitividade das empresas. Entre as principais alterações, destacam-se:
+
+Prevalência do Negociado sobre o Legislado: Uma das mudanças mais debatidas foi a possibilidade de acordos coletivos prevalecerem sobre a legislação. Isso significa que os sindicatos e empregadores podem negociar condições de trabalho diferentes das previstas na CLT, desde que não contrariem os direitos essenciais dos trabalhadores.
+
+Jornada de Trabalho: A reforma flexibilizou a jornada de trabalho, permitindo a adoção do regime de jornada intermitente, onde o trabalhador é pago apenas pelas horas efetivamente trabalhadas. Também foi permitido o aumento da jornada diária para 12 horas, desde que respeitado o limite de 44 horas semanais.
+
+Férias: A divisão das férias em até três períodos foi autorizada, sendo que um dos períodos não pode ser inferior a 14 dias e os outros não podem ser inferiores a cinco dias cada um. Essa flexibilização visa atender melhor as necessidades dos empregadores e empregados.
+
+Contribuição Sindical: A contribuição sindical, que era obrigatória, passou a ser facultativa. Essa mudança impactou significativamente o financiamento dos sindicatos, que precisaram buscar novas formas de arrecadação e se adaptar a um novo cenário de representatividade.
+
+Trabalho Remoto: A reforma regulamentou o teletrabalho, ou home office, estabelecendo que o controle da jornada não se aplica a essa modalidade. Também ficou definido que as despesas com equipamentos e infraestrutura devem ser acordadas entre empregador e empregado.
+
+Terceirização: Foi ampliada a possibilidade de terceirização para todas as atividades da empresa, inclusive a atividade-fim. Isso permitiu uma maior flexibilidade na contratação de serviços especializados e a adaptação das empresas às demandas de mercado.
+
+Rescisão Contratual: A rescisão contratual pode ser feita por acordo entre empregador e empregado, com o pagamento de metade do aviso prévio e da multa do FGTS, além do saque de 80% do saldo do FGTS.
+
+A Reforma Trabalhista de 2017 foi alvo de intensos debates e polarização. Seus defensores argumentam que as mudanças trouxeram maior dinamismo ao mercado de trabalho, incentivaram a formalização de empregos e ajudaram a reduzir a burocracia para as empresas. Por outro lado, os críticos apontam que a reforma enfraqueceu a proteção aos trabalhadores, aumentou a precarização das condições de trabalho e dificultou a atuação dos sindicatos.
+
+Independentemente das opiniões divergentes, a reforma representa um marco importante na história das relações de trabalho no Brasil, refletindo a busca por um equilíbrio entre a necessidade de modernização das leis e a preservação dos direitos dos trabalhadores. As consequências e os impactos dessas mudanças ainda estão sendo avaliados e discutidos, mas certamente moldarão o futuro do trabalho no país.</Text>
+              </>
+            )}
+          </Text>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setModalVisible(false)}
+          >
+            <Text style={styles.closeButtonText}>Fechar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -493,34 +464,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: screenWidth * 0.9,
     backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    maxHeight: '80%',
-  },
-  modalScroll: {
-    maxHeight: '70%',
-  },
-  modalButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#FF5C00',
-    borderRadius: 5,
+    padding: 22,
+    justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
   },
-  modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
+  modalImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
   },
   modalText: {
-    fontSize: 16,
-    color: '#666',
+    fontSize: 18,
+    textAlign: 'center',
   },
   closeButton: {
     marginTop: 10,
@@ -533,48 +491,47 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    zIndex: 1,
-  },
-  sideMenu: {
+  menu: {
     position: 'absolute',
-    top: 120,
-    bottom: 0,
-    left: 0,
+    top: 0,
+    right: 0,
     width: '75%',
+    height: '100%',
     backgroundColor: '#000',
-    zIndex: 2,
+    zIndex: 2000,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
   },
   menuTitle: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
     color: '#fff',
-    top: 33,
-  },
-  menuItem: {
-    fontSize: 18,
-    marginBottom: 20,
+    marginBottom: 10,
     fontWeight: 'bold',
+  },
+  menuSeparator: {
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    marginBottom: 20,
+  },
+  menuButton: {
+    paddingVertical: 15,
+  },
+  menuButtonText: {
+    fontSize: 18,
     color: '#fff',
-    top: 55,
   },
-  closeMenuButton: {
-    fontSize: 18,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#FF5C00',
-    textAlign: 'center',
-    top: 123,
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#000',
+    opacity: 0.5,
+    zIndex: 1500,
+  },
+  overlayTouchable: {
+    width: '100%',
+    height: '100%',
   },
 });
 

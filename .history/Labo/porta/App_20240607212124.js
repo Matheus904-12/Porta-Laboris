@@ -13,7 +13,6 @@ const App = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const translateX = useRef(new Animated.Value(screenWidth)).current;
   const overlayOpacity = useRef(new Animated.Value(0)).current;
-  const modalRef = useRef(null);
 
   const toggleMenu = () => {
     if (menuVisible) {
@@ -79,48 +78,6 @@ const App = () => {
   const openModal = (content) => {
     setModalContent(content);
     setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    if (modalRef.current) {
-      modalRef.current.animate('bounceOut', 500).then(() => {
-        setModalVisible(false);
-      });
-    } else {
-      setModalVisible(false);
-    }
-  };
-
-  const renderModalContent = () => {
-    switch (modalContent) {
-      case 'animation':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>A Animação da CLT</Text>
-            <Text style={styles.modalText}>Entenda como a CLT foi desenvolvida e estruturada para proteger os direitos dos trabalhadores brasileiros...</Text>
-          </ScrollView>
-        );
-      case 'history':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>História da CLT</Text>
-            <Text style={styles.modalText}>A CLT, criada em 1943, é um marco na regulamentação das relações de trabalho no Brasil. Conheça os principais eventos que levaram à sua criação...</Text>
-          </ScrollView>
-        );
-      case 'reforms':
-        return (
-          <ScrollView style={styles.modalScroll}>
-            <Text style={styles.modalTitle}>Reformas na CLT</Text>
-            <Text style={styles.modalText}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor. Maecenas nisl est, ultrices nec congue eget, auctor vitae massa...</Text>
-          </ScrollView>
-        );
-      default:
-        return <Text style={styles.modalText}>{modalContent}</Text>;
-    }
-  };
-
-  const openLink = (url) => {
-    Linking.openURL(url);
   };
 
   return (
@@ -234,24 +191,6 @@ const App = () => {
           <Text style={styles.fottext}>2024 - Porta Laboris</Text>
           <Text style={styles.fottext}>Política de Privacidade - Política de Cookies</Text>
         </View>
-
-        <Modal
-          isVisible={modalVisible}
-          onBackdropPress={closeModal}
-          style={styles.modal}
-        >
-          <Animatable.View
-            ref={modalRef}
-            animation="bounceIn"
-            duration={1500}
-            style={styles.modalContent}
-          >
-            {renderModalContent()}
-            <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-              <Text style={styles.modalButtonText}>Fechar</Text>
-            </TouchableOpacity>
-          </Animatable.View>
-        </Modal>
       </ScrollView>
 
       {menuVisible && (
@@ -260,25 +199,28 @@ const App = () => {
         </Animated.View>
       )}
 
-      <Animated.View style={[styles.sideMenu, { transform: [{ translateX }] }]}>
-        <Text style={styles.menuTitle}>Refêrencias</Text>
-        
-        <TouchableOpacity onPress={() => openLink('https://www.planalto.gov.br/ccivil_03/decreto-lei/del5452.htm')}>
-          <Text style={styles.menuItem}>Consolidação - GOV.BR</Text>
+      <Animated.View style={[styles.menu, { transform: [{ translateX }] }]}>
+        <Text style={styles.menuTitle}>Menu</Text>
+        <View style={styles.menuSeparator} />
+        <TouchableOpacity style={styles.menuButton} onPress={() => { /* Handle navigation */ }}>
+          <Text style={styles.menuButtonText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.gov.br/trabalho-e-emprego/pt-br/servicos/trabalhador/carteira-de-trabalho')}>
-          <Text style={styles.menuItem}>Emprega Brasil - GOV.BR</Text>
+        <TouchableOpacity style={styles.menuButton} onPress={() => { /* Handle navigation */ }}>
+          <Text style={styles.menuButtonText}>About</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www2.senado.leg.br/bdsf/bitstream/handle/id/535468/clt_e_normas_correlatas_1ed.pdf')}>
-          <Text style={styles.menuItem}>Senado Federal - BR</Text>
+        <TouchableOpacity style={styles.menuButton} onPress={() => { /* Handle navigation */ }}>
+          <Text style={styles.menuButtonText}>Services</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => openLink('https://www.portaldaindustria.com.br/industria-de-a-z/o-que-e-legislacao-trabalhista/')}>
-          <Text style={styles.menuItem}>Portal da Indústria - SESI/SENAI</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={toggleMenu}>
-          <Text style={styles.closeMenuButton}>Fechar Menu</Text>
+        <TouchableOpacity style={styles.menuButton} onPress={() => { /* Handle navigation */ }}>
+          <Text style={styles.menuButtonText}>Contact</Text>
         </TouchableOpacity>
       </Animated.View>
+
+      <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{modalContent}</Text>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -286,295 +228,255 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#252843',
+    backgroundColor: '#FFFFFF',
   },
   header: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    padding: 20,
-    backgroundColor: '#fff',
-    zIndex: 1000,
+    backgroundColor: '#FFFFFF',
+    paddingTop: 40,
+    paddingBottom: 10,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
   },
-  headerTitle: {
-    fontSize: 32,
-    color: '#000',
-    fontWeight: 'bold',
-    textAlign: 'left',
-    marginTop: 5,
+  headerContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   menuIcon: {
-    width: 40,
-    height: 40,
-    marginLeft: 325,
-    top: 50,
+    width: 30,
+    height: 30,
+    marginRight: 10,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333333',
+  },
+  content: {
+    paddingHorizontal: 10,
   },
   carousel: {
-    height: 280,
+    height: 200,
+    marginTop: 20,
   },
   carouselImage: {
-    width: screenWidth,
-    height: '100%',
+    width: screenWidth - 20,
+    height: 200,
+    borderRadius: 10,
     resizeMode: 'cover',
+    marginHorizontal: 5,
   },
   indicatorContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    position: 'absolute',
-    bottom: 10,
-    left: 0,
-    right: 0,
+    marginTop: 10,
   },
   indicator: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#ccc',
-    marginHorizontal: 5,
+    backgroundColor: '#CCCCCC',
+    marginHorizontal: 4,
   },
   activeIndicator: {
-    backgroundColor: '#FF6F00',
+    backgroundColor: '#333333',
   },
   section: {
-    padding: 20,
+    marginTop: 20,
   },
   sectionTitle: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    textAlign: 'center',
+    fontSize: 22,
     fontWeight: 'bold',
-    top: 25,
-  },
-  sectionTitle2: {
-    fontSize: 24,
-    color: '#fff',
+    color: '#333333',
     marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    top: 45,
-  },
-  sectionTitle3: {
-    fontSize: 24,
-    color: '#fff',
-    marginBottom: 10,
-    textAlign: 'center',
-    fontWeight: 'bold',
-    top: 75,
-  },
-  sectionSeparator: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 65,
-    width: 160,
-    alignSelf: 'center',
-  },
-  sectionSeparator3: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 95,
-    width: 160,
-    alignSelf: 'center',
-  },
-  sectionSeparator4: {
-    borderBottomColor: 'white',
-    borderBottomWidth: 1,
-    marginBottom: 10,
-    top: 175,
-    width: 600,
-    alignSelf: 'center',
   },
   sectionText: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 50,
-  },
-  sectionText2: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 85,
-  },
-  sectionText3: {
-    fontSize: 17,
-    color: '#fff',
-    textAlign: 'center',
-    top: 115,
+    fontSize: 16,
+    color: '#666666',
+    lineHeight: 24,
   },
   card: {
-    top: 45,
-    marginVertical: 10,
+    width: '100%',
+    height: 100,
     borderRadius: 10,
-    color: '#fff',
-    fontSize: 18,
+    overflow: 'hidden',
+    marginBottom: 10,
+  },
+  cardBackgroundImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  sectionTitle2: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 5,
+    marginTop: 5,
+  },
+  sectionSeparator: {
+    height: 2,
+    backgroundColor: '#FFD700',
+    marginVertical: 8,
+    width: '30%',
+    marginLeft: '35%',
+  },
+  sectionText2: {
+    fontSize: 16,
+    color: '#666666',
     textAlign: 'center',
   },
   creators: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'center',
-    marginTop: 190,
   },
   creator: {
     alignItems: 'center',
     marginHorizontal: 10,
   },
   creatorImage: {
-    width: 230,
-    height: 230,
-    backgroundColor: '#555',
-    borderRadius: 200,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    resizeMode: 'cover',
     marginBottom: 10,
   },
   creatorName: {
-    color: '#fff',
-    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333333',
+  },
+  sectionTitle3: {
     fontSize: 22,
     fontWeight: 'bold',
+    color: '#333333',
+    marginBottom: 10,
+    textAlign: 'center',
+    marginTop: 15,
+  },
+  sectionSeparator3: {
+    height: 2,
+    backgroundColor: '#FFD700',
+    marginVertical: 8,
+    width: '30%',
+    marginLeft: '35%',
+  },
+  sectionText3: {
+    fontSize: 16,
+    color: '#666666',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   input: {
-    backgroundColor: '#fff',
+    height: 40,
+    borderColor: '#CCCCCC',
+    borderWidth: 1,
     borderRadius: 5,
-    padding: 15,
-    marginBottom: 15,
-    fontSize: 16,
-    top: 150,
-  },
-  messageInput: {
-    height: 150, // Aumente a altura do campo de mensagem
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
   button: {
-    backgroundColor: '#FF5C00',
-    padding: 15,
+    backgroundColor: '#FFD700',
+    paddingVertical: 10,
     borderRadius: 5,
     alignItems: 'center',
-    top: 165,
+    marginTop: 10,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
+    color: '#333333',
+  },
+  sectionSeparator4: {
+    height: 2,
+    backgroundColor: '#FFD700',
+    marginVertical: 20,
+    width: '80%',
+    marginLeft: '10%',
   },
   footer: {
-    padding: 20,
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 200,
-  },
-  fottext: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  footerNote: {
-    padding: 20,
-    alignItems: 'center',
-    backgroundColor: '#000',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
   },
   iconTextContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    top: -20,
-  },
-  icon: {
-    width: 42,
-    height: 42,
-  },
-  footerText: {
-    color: '#fff',
-    marginTop: 5,
-    fontWeight: 'bold',
-    fontSize: 17,
-  },
-  modal: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: screenWidth * 0.9,
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
-    maxHeight: '80%',
-  },
-  modalScroll: {
-    maxHeight: '70%',
-  },
-  modalButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#FF5C00',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
     marginBottom: 10,
   },
-  modalText: {
-    fontSize: 16,
-    color: '#666',
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 5,
   },
-  closeButton: {
-    marginTop: 10,
-    backgroundColor: '#FF5C00',
+  footerText: {
+    fontSize: 16,
+    color: '#333333',
+  },
+  footerNote: {
+    backgroundColor: '#333333',
     padding: 10,
-    borderRadius: 5,
   },
-  closeButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
+  fottext: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    zIndex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  sideMenu: {
+  overlayTouchable: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  menu: {
     position: 'absolute',
-    top: 120,
+    top: 0,
     bottom: 0,
     left: 0,
     width: '75%',
-    backgroundColor: '#000',
-    zIndex: 2,
+    backgroundColor: '#FFFFFF',
     padding: 20,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    elevation: 5,
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 10,
   },
   menuTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#fff',
-    top: 33,
+    marginBottom: 10,
   },
-  menuItem: {
-    fontSize: 18,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#fff',
-    top: 55,
+  menuSeparator: {
+    height: 2,
+    backgroundColor: '#FFD700',
+    marginVertical: 10,
+    width: '100%',
   },
-  closeMenuButton: {
+  menuButton: {
+    paddingVertical: 10,
+  },
+  menuButtonText: {
     fontSize: 18,
-    marginBottom: 20,
-    fontWeight: 'bold',
-    color: '#FF5C00',
-    textAlign: 'center',
-    top: 123,
+    color: '#333333',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalText: {
+    fontSize: 18,
+    color: '#333333',
   },
 });
 
