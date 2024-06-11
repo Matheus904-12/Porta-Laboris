@@ -54,9 +54,9 @@ const App = () => {
 
   const creatorsData = [
     { id: '1', image: require('./assets/edgar.jpg'), name: 'Edgar Feitoza De Almeida' },
-    { id: '2', image: require('./assets/eu.jpg'), name: 'Matheus Lucindo dos Santos' },
+    { id: '2', image: require('./assets/matheus.jpg'), name: 'Matheus Lucindo dos Santos' },
     { id: '3', image: require('./assets/luiss.png'), name: 'Luiz Henrique Barbosa Dias' },
-    { id: '4', image: require('./assets/liu.jpg'), name: 'Luis Henrique dos Santos Oliveira' },
+    { id: '4', image: require('./assets/image1.png'), name: 'Luis' },
     { id: '5', image: require('./assets/kaua.jpg'), name: 'Kauã Santos de Lima' }
   ];
 
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'center',
     color: '#fff',
-    top: 8,
+    top: 3,
   },
   menuItem: {
     fontSize: 18,

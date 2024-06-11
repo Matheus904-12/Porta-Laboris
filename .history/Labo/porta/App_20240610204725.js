@@ -54,9 +54,9 @@ const App = () => {
 
   const creatorsData = [
     { id: '1', image: require('./assets/edgar.jpg'), name: 'Edgar Feitoza De Almeida' },
-    { id: '2', image: require('./assets/eu.jpg'), name: 'Matheus Lucindo dos Santos' },
+    { id: '2', image: require('./assets/matheus.jpg'), name: 'Matheus Lucindo dos Santos' },
     { id: '3', image: require('./assets/luiss.png'), name: 'Luiz Henrique Barbosa Dias' },
-    { id: '4', image: require('./assets/liu.jpg'), name: 'Luis Henrique dos Santos Oliveira' },
+    { id: '4', image: require('./assets/image1.png'), name: 'Luis' },
     { id: '5', image: require('./assets/kaua.jpg'), name: 'Kauã Santos de Lima' }
   ];
 
@@ -206,8 +206,8 @@ const App = () => {
           <Text style={styles.sectionText3}>Preencha os Campos abaixo para entrar em contato conosco!</Text>
           <TextInput style={styles.input} placeholder="Nome" />
           <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Seu telefone (opicional)" keyboardType="numeric" />
-          <TextInput style={[styles.input, styles.messageInput]} placeholder="Mensagem" multiline />
+          <TextInput style={styles.input} placeholder="Seu telefone (opicional)" />
+          <TextInput style={styles.input} placeholder="Mensagem" multiline />
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Enviar</Text>
           </TouchableOpacity>
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     height: 150, // Aumente a altura do campo de mensagem
   },
   button: {
-    backgroundColor: '#008f39',
+    backgroundColor: '#FF5C00',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
   modalButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#008f39',
+    backgroundColor: '#FF5C00',
     borderRadius: 5,
     alignItems: 'center',
   },
@@ -524,7 +524,7 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     marginTop: 10,
-    backgroundColor: '#008f39',
+    backgroundColor: '#FF5C00',
     padding: 10,
     borderRadius: 5,
   },
@@ -541,38 +541,37 @@ const styles = StyleSheet.create({
   sideMenu: {
     position: 'absolute',
     top: 120,
-    bottom: 20,
+    bottom: 0,
     left: 0,
     width: '75%',
-    backgroundColor: '#0e0e10',
+    backgroundColor: '#000',
     zIndex: 2,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
-    elevation: 5,
   },
   menuTitle: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
     color: '#fff',
-    top: 8,
+    top: 33,
   },
   menuItem: {
     fontSize: 18,
     marginBottom: 20,
     fontWeight: 'bold',
     color: '#fff',
-    top: 25,
+    top: 55,
   },
   closeMenuButton: {
     fontSize: 18,
     marginBottom: 20,
     fontWeight: 'bold',
-    color: '#008f39',
+    color: '#FF5C00',
     textAlign: 'center',
     top: 123,
   },
