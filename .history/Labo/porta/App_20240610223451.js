@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, ScrollView, View, Text, TextInput, TouchableOpacity, Image, FlatList, Dimensions, Animated, Linking } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Modal from 'react-native-modal';
-import * as SplashScreen from 'expo-splash-screen';
 
-SplashScreen.preventAutoHideAsync(); //Mantem a tela SplashScreen
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -62,18 +60,6 @@ const App = () => {
     { id: '4', image: require('./assets/liu.jpg'), name: 'Luis Henrique dos Santos Oliveira' },
     { id: '5', image: require('./assets/kaua.jpg'), name: 'Kauã Santos de Lima' }
   ];
-
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        await SplashScreen.hideAsync();
-      } catch (erro) {
-        console.error(erro);
-      } 
-    }
-    prepare();
-  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {

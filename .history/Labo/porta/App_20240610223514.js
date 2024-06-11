@@ -64,18 +64,6 @@ const App = () => {
   ];
 
   useEffect(() => {
-    async function prepare() {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        await SplashScreen.hideAsync();
-      } catch (erro) {
-        console.error(erro);
-      } 
-    }
-    prepare();
-  }, []);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselData.length);
     }, 3000); // Change image every 3 seconds

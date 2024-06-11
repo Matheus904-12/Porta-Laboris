@@ -63,18 +63,8 @@ const App = () => {
     { id: '5', image: require('./assets/kaua.jpg'), name: 'Kauã Santos de Lima' }
   ];
 
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 5000));
-        await SplashScreen.hideAsync();
-      } catch (erro) {
-        console.error(erro);
-      } 
-    }
-    prepare();
-  }, []);
 
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % carouselData.length);
